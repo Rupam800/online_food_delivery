@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{% static 'myapp/images/favicon.png'%}" type="">
+
+  <title> Feane </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/bootstrap.css' %}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href=" {% static 'myapp/css/style.css' %} " rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'myapp/css/responsive.css' %}" rel="stylesheet" />
+
+</head>
+
+<body class="sub_page">
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="{% static 'myapp/images/hero-bg.jpg'%}" alt="">
+    </div>
+    <!-- header section strats -->
+    {% include './navbar.html' %}
+    <!-- end header section -->
+  </div>
+
+   <!-- food section -->
+
+   <section class="food_section layout_padding-bottom">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <br><br>
+        <h2>
+          Our Menu
+        </h2>
+      </div>
+
+      <ul class="filters_menu">
+        <li class="active" data-filter="*">All</li>
+        {% for menu in allMenu %}
+        {% if menu.menu_catagory == 'Veg' %}
+        <li data-filter=".{{ menu.menu_name|lower }}"><img src="{% static 'myapp/images/p1.jpg' %}" alt="Veg" style="height: 27px; width: 27px;"> {{ menu.menu_name }}</li>
+    {% elif menu.menu_catagory == 'Non-veg' %}
+        <li data-filter=".{{ menu.menu_name|lower }}"><img src="{% static 'myapp/images/p2.jpg' %}" alt="Non-veg" style="height: 27px; width: 27px;"> {{ menu.menu_name }} </li>
+        {% elif menu.menu_catagory == 'Drinks' %}
+        <li data-filter=".{{ menu.menu_name|lower }}"> {{ menu.menu_name }} </li>
+    {% endif %}
+        {% endfor %}
+    </ul>
+    
+    <div class="filters-content">
+      <div class="row grid">
+          {% for menu in allMenu %}
+              {% for item in menu.item_set.all %}
+                  <div class="col-sm-6 col-lg-4 all {{ menu.menu_name|lower }} {{ menu.menu_category|lower }}">
+                      <div class="box">
+                          <div>
+                              <div class="img-box">
+                                  <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                              </div>
+                              <div class="detail-box">
+                                  <h5>{{ item.name }}</h5>
+                                  <p>{{ item.description }}</p>
+                                  <div class="options">
+                                      <h6>Rs. {{ item.price|floatformat:0 }} /- only</h6>
+                                      <!-- Use a styled button to add to cart -->
+                                      <a href="/add_to_cart/{{item.id}}">
+                                        <button type="button" class="btn btn-primary add-to-cart-btn">
+                                          <img src="{% static 'myapp/images/cart1.png' %}" alt="Add to Cart" height="50" width="50">
+                                        </button>
+                                      </a>
+                                  </div>
+                                  
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+      </div>
+  </div>
+  
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Click event handler for the add to cart images
+        $(".add-to-cart").click(function() {
+            // Get the item ID from the data-item-id attribute
+            var itemId = $(this).data("item-id");
+            // Make an AJAX request to add the item to the cart
+            $.ajax({
+                type: "GET", // or POST depending on your implementation
+                url: "/add_to_cart/" + itemId + "/", // adjust the URL according to your backend implementation
+                success: function(response) {
+                    // Handle the success response, e.g., show a confirmation message
+                    alert("Item added to cart!");
+                },
+                error: function(xhr, status, error) {
+                    // Handle the error, e.g., show an error message
+                    alert("Failed to add item to cart. Error: " + error);
+                }
+            });
+        });
+    });
+</script>
+
+  
+  
+      <div class="btn-box">
+        <a href="menu">
+          View More
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- end food section -->
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact">
+            <h4>
+              Contact Us
+            </h4>
+            <div class="contact_link_box">
+              <a href="">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  Location
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                  Call +01 1234567890
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>
+                  demo@gmail.com
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <a href="" class="footer-logo">
+              Feane
+            </a>
+            <p>
+              Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
+            </p>
+            <div class="footer_social">
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-pinterest" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <h4>
+            Opening Hours
+          </h4>
+          <p>
+            Everyday
+          </p>
+          <p>
+            10.00 Am -10.00 Pm
+          </p>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">Free Html Templates</a><br><br>
+          &copy; <span id="displayYear"></span> Distributed By
+          <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+  <!-- jQery -->
+  <script src=" {% static 'myapp/js/jquery-3.4.1.min.js'%}"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="{% static 'myapp/js/bootstrap.js'%}"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="{% static 'myapp/js/custom.js'%}"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>
